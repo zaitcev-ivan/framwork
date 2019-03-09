@@ -1,8 +1,8 @@
 <?php
 
-use Framework\Http\ResponseSender;
 use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\ServerRequestFactory;
+use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
@@ -18,7 +18,7 @@ $response = (new HtmlResponse('Hello, ' . $name . '!'))
     ->withHeader('X-Developer', 'Zaicev');
 
 # Sending
-$emitter = new ResponseSender();
-$emitter->send($response);
+$emitter = new SapiEmitter();
+$emitter->emit($response);
 
 
