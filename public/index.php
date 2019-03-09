@@ -11,6 +11,11 @@ require 'vendor/autoload.php';
 
 $request = ServerRequestFactory::fromGlobals();
 
+# Preprocessing
+if (preg_match('#json#i', $request->getHeader('Content-Type'))) {
+    $request = $request->withParsedBody(json_decode($request->getBody()->getContents()));
+}
+
 # Action
 $name = $request->getQueryParams()['name'] ?? 'Guest';
 $response = new HtmlResponse('Hello, ' . $name . '!');
