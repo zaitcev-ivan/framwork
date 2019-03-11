@@ -22,7 +22,7 @@ $routes = $aura->getMap();
 $routes->get('home', '/', HelloAction::class);
 $routes->get('about', '/about', AboutAction::class);
 $routes->get('blog', '/blog', IndexAction::class);
-$routes->get('blog_show', '/blog/{id}', ShowAction::class, ['id' => '\d+']);
+$routes->get('blog_show', '/blog/{id}', ShowAction::class)->tokens(['id' => '\d+']);
 
 $router = new AuraRouterAdapter($aura);
 $resolver = new ActionResolver();
