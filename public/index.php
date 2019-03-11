@@ -4,6 +4,7 @@ use App\Http\Action\AboutAction;
 use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\ShowAction;
 use App\Http\Action\HelloAction;
+use Framework\Http\ActionResolver;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Framework\Http\Router\RouteCollection;
 use Framework\Http\Router\Router;
@@ -23,6 +24,7 @@ $routes->get('blog', '/blog', IndexAction::class);
 $routes->get('blog_show', '/blog/{id}', ShowAction::class, ['id' => '\d+']);
 
 $router = new Router($routes);
+$resolver = new ActionResolver();
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
@@ -32,8 +34,7 @@ try {
         $request = $request->withAttribute($attribute, $value);
     }
     $handler = $result->getHandler();
-    /** @var callable $action */
-    $action = is_string($handler) ? new $handler() : $handler;
+    $action = $resolver->resolve($handler);
     $response = $action($request);
 } catch (RequestNotMatchedException $e){
     $response = new HtmlResponse('Undefined page', 404);
