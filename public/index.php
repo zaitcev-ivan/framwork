@@ -3,6 +3,7 @@
 use App\Http\Action\AboutAction;
 use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\ShowAction;
+use App\Http\Action\CabinetAction;
 use App\Http\Action\HelloAction;
 use Aura\Router\RouterContainer;
 use Framework\Http\ActionResolver;
@@ -21,6 +22,7 @@ $routes = $aura->getMap();
 
 $routes->get('home', '/', HelloAction::class);
 $routes->get('about', '/about', AboutAction::class);
+$routes->get('cabinet', '/cabinet', CabinetAction::class);
 $routes->get('blog', '/blog', IndexAction::class);
 $routes->get('blog_show', '/blog/{id}', ShowAction::class)->tokens(['id' => '\d+']);
 
