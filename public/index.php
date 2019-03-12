@@ -16,13 +16,17 @@ use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
+$params = [
+    'users' => ['admin' => 'password'],
+];
+
 # Initialization
 $aura = new RouterContainer();
 $routes = $aura->getMap();
 
 $routes->get('home', '/', HelloAction::class);
 $routes->get('about', '/about', AboutAction::class);
-$routes->get('cabinet', '/cabinet', CabinetAction::class);
+$routes->get('cabinet', '/cabinet', new CabinetAction($params['users']));
 $routes->get('blog', '/blog', IndexAction::class);
 $routes->get('blog_show', '/blog/{id}', ShowAction::class)->tokens(['id' => '\d+']);
 
