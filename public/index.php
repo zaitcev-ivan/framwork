@@ -6,6 +6,7 @@ use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\ShowAction;
 use App\Http\Action\CabinetAction;
 use App\Http\Action\HelloAction;
+use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterContainer;
 use Framework\Http\ActionResolver;
@@ -13,7 +14,6 @@ use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -35,9 +35,8 @@ $routes->get('cabinet', '/cabinet', function (ServerRequestInterface $request) u
     $pipeline->pipe(new ProfilerMiddleware());
     $pipeline->pipe(new BasicAuthMiddleware($params['users']));
     $pipeline->pipe(new CabinetAction());
-    return $pipeline($request, function () {
-        return new HtmlResponse('Undefined page', 404);
-    });
+
+    return $pipeline($request, new NotFoundHandler());
 });
 $routes->get('blog', '/blog', IndexAction::class);
 $routes->get('blog_show', '/blog/{id}', ShowAction::class)->tokens(['id' => '\d+']);
@@ -56,7 +55,8 @@ try {
     $action = $resolver->resolve($handler);
     $response = $action($request);
 } catch (RequestNotMatchedException $e){
-    $response = new HtmlResponse('Undefined page', 404);
+    $handler = new NotFoundHandler();
+    $response = $handler($request);
 }
 
 
