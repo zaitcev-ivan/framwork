@@ -9,6 +9,7 @@ use App\Http\Action\HelloAction;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterContainer;
 use Framework\Http\ActionResolver;
+use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
 use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -30,13 +31,12 @@ $routes = $aura->getMap();
 $routes->get('home', '/', HelloAction::class);
 $routes->get('about', '/about', AboutAction::class);
 $routes->get('cabinet', '/cabinet', function (ServerRequestInterface $request) use ($params) {
-    $profiler = new ProfilerMiddleware();
-    $auth = new BasicAuthMiddleware($params['users']);
-    $cabinet = new CabinetAction();
-    return $profiler($request, function (ServerRequestInterface $request) use ($auth, $cabinet) {
-        return $auth($request, function (ServerRequestInterface $request) use ($cabinet) {
-            return $cabinet($request);
-        });
+    $pipeline = new Pipeline();
+    $pipeline->pipe(new ProfilerMiddleware());
+    $pipeline->pipe(new BasicAuthMiddleware($params['users']));
+    $pipeline->pipe(new CabinetAction());
+    return $pipeline($request, function () {
+        return new HtmlResponse('Undefined page', 404);
     });
 });
 $routes->get('blog', '/blog', IndexAction::class);
