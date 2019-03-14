@@ -7,6 +7,7 @@ use App\Http\Action\Blog\ShowAction;
 use App\Http\Action\CabinetAction;
 use App\Http\Action\HelloAction;
 use App\Http\Middleware\CredentialsMiddleware;
+use App\Http\Middleware\ErrorHandlerMiddleware;
 use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterContainer;
@@ -22,6 +23,7 @@ chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
 $params = [
+    'debug' => true,
     'users' => ['admin' => 'password'],
 ];
 
@@ -42,6 +44,7 @@ $router = new AuraRouterAdapter($aura);
 $resolver = new MiddlewareResolver();
 $app = new Application($resolver, new NotFoundHandler());
 
+$app->pipe(new ErrorHandlerMiddleware($params['debug']));
 $app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfilerMiddleware::class);
 
