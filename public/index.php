@@ -10,7 +10,8 @@ use App\Http\Middleware\CredentialsMiddleware;
 use App\Http\Middleware\ErrorHandlerMiddleware;
 use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
-use App\Http\Middleware\RouteMiddleware;
+use Framework\Http\Middleware\DispatchMiddleware;
+use Framework\Http\Middleware\RouteMiddleware;
 use Aura\Router\RouterContainer;
 use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
@@ -46,7 +47,8 @@ $app = new Application($resolver, new NotFoundHandler());
 $app->pipe(new ErrorHandlerMiddleware($params['debug']));
 $app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfilerMiddleware::class);
-$app->pipe(new RouteMiddleware($router, $resolver));
+$app->pipe(new RouteMiddleware($router));
+$app->pipe(new DispatchMiddleware($resolver));
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
