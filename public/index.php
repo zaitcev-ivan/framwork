@@ -9,6 +9,7 @@ use App\Http\Action\HelloAction;
 use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterContainer;
+use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
 use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
@@ -38,9 +39,9 @@ $routes->get('blog_show', '/blog/{id}', ShowAction::class)->tokens(['id' => '\d+
 
 $router = new AuraRouterAdapter($aura);
 $resolver = new MiddlewareResolver();
-$pipeline = new Pipeline();
+$app = new Application($resolver);
 
-$pipeline->pipe($resolver->resolve(ProfilerMiddleware::class));
+$app->pipe(ProfilerMiddleware::class);
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
@@ -49,11 +50,10 @@ try {
     foreach ($result->getAttributes() as $attribute => $value) {
         $request = $request->withAttribute($attribute, $value);
     }
-    $handler = $result->getHandler();
-    $pipeline->pipe($resolver->resolve($handler));
+    $app->pipe($result->getHandler());
 } catch (RequestNotMatchedException $e){}
 
-$response = $pipeline($request, new NotFoundHandler());
+$response = $app($request, new NotFoundHandler());
 
 # Postprocessing
 $response = $response->withHeader('X-Developer', 'Zaicev');
