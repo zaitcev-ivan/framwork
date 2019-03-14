@@ -6,6 +6,7 @@ use App\Http\Action\Blog\IndexAction;
 use App\Http\Action\Blog\ShowAction;
 use App\Http\Action\CabinetAction;
 use App\Http\Action\HelloAction;
+use App\Http\Middleware\CredentialsMiddleware;
 use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
 use Aura\Router\RouterContainer;
@@ -41,6 +42,7 @@ $router = new AuraRouterAdapter($aura);
 $resolver = new MiddlewareResolver();
 $app = new Application($resolver, new NotFoundHandler());
 
+$app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfilerMiddleware::class);
 
 ### Running
@@ -54,9 +56,6 @@ try {
 } catch (RequestNotMatchedException $e){}
 
 $response = $app->run($request);
-
-# Postprocessing
-$response = $response->withHeader('X-Developer', 'Zaicev');
 
 # Sending
 $emitter = new SapiEmitter();
