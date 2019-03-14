@@ -10,12 +10,11 @@ use App\Http\Middleware\CredentialsMiddleware;
 use App\Http\Middleware\ErrorHandlerMiddleware;
 use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
+use App\Http\Middleware\RouteMiddleware;
 use Aura\Router\RouterContainer;
 use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
-use Framework\Http\Pipeline\Pipeline;
 use Framework\Http\Router\AuraRouterAdapter;
-use Framework\Http\Router\Exception\RequestNotMatchedException;
 use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
@@ -47,17 +46,10 @@ $app = new Application($resolver, new NotFoundHandler());
 $app->pipe(new ErrorHandlerMiddleware($params['debug']));
 $app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfilerMiddleware::class);
+$app->pipe(new RouteMiddleware($router, $resolver));
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
-try {
-    $result = $router->match($request);
-    foreach ($result->getAttributes() as $attribute => $value) {
-        $request = $request->withAttribute($attribute, $value);
-    }
-    $app->pipe($result->getHandler());
-} catch (RequestNotMatchedException $e){}
-
 $response = $app->run($request);
 
 # Sending
