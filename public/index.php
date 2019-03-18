@@ -43,7 +43,7 @@ $routes->get('blog_show', '/blog/{id}', ShowAction::class)->tokens(['id' => '\d+
 
 $router = new AuraRouterAdapter($aura);
 $resolver = new MiddlewareResolver();
-$app = new Application($resolver, new NotFoundHandler());
+$app = new Application($resolver, new NotFoundHandler(), new Response());
 
 $app->pipe(new ErrorHandlerMiddleware($params['debug']));
 $app->pipe(CredentialsMiddleware::class);
@@ -53,7 +53,7 @@ $app->pipe(new DispatchMiddleware($resolver));
 
 ### Running
 $request = ServerRequestFactory::fromGlobals();
-$response = $app->run($request, new Response());
+$response = $app->run($request, new Response(), new Response());
 
 # Sending
 $emitter = new SapiEmitter();
