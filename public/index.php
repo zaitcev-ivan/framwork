@@ -10,6 +10,7 @@ use App\Http\Middleware\CredentialsMiddleware;
 use App\Http\Middleware\ErrorHandlerMiddleware;
 use App\Http\Middleware\NotFoundHandler;
 use App\Http\Middleware\ProfilerMiddleware;
+use Framework\Container\Container;
 use Framework\Http\Middleware\DispatchMiddleware;
 use Framework\Http\Middleware\RouteMiddleware;
 use Aura\Router\RouterContainer;
@@ -23,12 +24,22 @@ use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-$params = [
+# Configuration
+
+$container = new Container();
+$container->set('config', [
     'debug' => true,
     'users' => ['admin' => 'password'],
-];
+]);
 
-# Initialization
+$container->set('middleware.basic_auth', function (Container $container) {
+    return new BasicAuthMiddleware($container->get('config')['users']);
+});
+$container->set('middleware.error_handler', function (Container $container) {
+    return new ErrorHandlerMiddleware($container->get('config')['debug']);
+});
+
+### Initialization
 $aura = new RouterContainer();
 $routes = $aura->getMap();
 
@@ -42,11 +53,11 @@ $router = new AuraRouterAdapter($aura);
 $resolver = new MiddlewareResolver();
 $app = new Application($resolver, new NotFoundHandler(), new Response());
 
-$app->pipe(new ErrorHandlerMiddleware($params['debug']));
+$app->pipe($container->get('middleware.error_handler'));
 $app->pipe(CredentialsMiddleware::class);
 $app->pipe(ProfilerMiddleware::class);
 $app->pipe(new RouteMiddleware($router));
-$app->pipe('cabinet', new BasicAuthMiddleware($params['users']));
+$app->pipe('cabinet', $container->get('middleware.basic_auth'));
 $app->pipe(new DispatchMiddleware($resolver));
 
 ### Running
