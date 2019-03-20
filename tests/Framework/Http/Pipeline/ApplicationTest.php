@@ -2,8 +2,10 @@
 
 namespace Tests\Framework\Http\Pipeline;
 
+use Aura\Router\RouterContainer;
 use Framework\Http\Application;
 use Framework\Http\Pipeline\MiddlewareResolver;
+use Framework\Http\Router\AuraRouterAdapter;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -15,7 +17,7 @@ class ApplicationTest extends TestCase
 {
     public function testPipe(): void
     {
-        $app = new Application(new MiddlewareResolver(), new DefaultHandler(), new Response());
+        $app = new Application(new MiddlewareResolver(),new AuraRouterAdapter(new RouterContainer()), new DefaultHandler(), new Response());
         $app->pipe(new Middleware1());
         $app->pipe(new Middleware2());
         $response = $app->run(new ServerRequest(), new Response());
