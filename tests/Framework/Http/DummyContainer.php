@@ -2,14 +2,14 @@
 
 namespace Tests\Framework\Http;
 
-use Framework\Container\Container;
+use Framework\Container\ContainerInterface;
 use Framework\Container\ServiceNotFoundException;
 
 /**
  * Class DummyContainer
  * @package Tests\Framework\Http
  */
-class DummyContainer extends Container
+class DummyContainer implements ContainerInterface
 {
     public function get($id)
     {

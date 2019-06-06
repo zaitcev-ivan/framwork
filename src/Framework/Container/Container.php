@@ -8,7 +8,7 @@ use ReflectionClass;
  * Class Container
  * @package Framework\Container
  */
-class Container
+class Container implements ContainerInterface
 {
     private $definitions;
     private $results = [];

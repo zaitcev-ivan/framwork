@@ -6,7 +6,7 @@ use Zend\Diactoros\ServerRequestFactory;
 use Zend\HttpHandlerRunner\Emitter\SapiEmitter;
 
 /**
- * @var \Framework\Container\Container $container
+ * @var \Framework\Container\ContainerInterface $container
  * @var \Framework\Http\Application $app
  */
 

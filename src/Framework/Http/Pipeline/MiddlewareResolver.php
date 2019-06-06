@@ -2,7 +2,7 @@
 
 namespace Framework\Http\Pipeline;
 
-use Framework\Container\Container;
+use Framework\Container\ContainerInterface;
 use Interop\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -11,11 +11,11 @@ use Zend\Stratigility\MiddlewarePipe;
 class MiddlewareResolver
 {
     /**
-     * @var Container
+     * @var ContainerInterface
      */
     private $container;
 
-    public function __construct(Container $container)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
