@@ -3,6 +3,7 @@
 namespace Framework\Container;
 
 use ReflectionClass;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class Container
