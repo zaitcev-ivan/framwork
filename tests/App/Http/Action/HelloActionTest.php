@@ -3,7 +3,7 @@
 namespace Tests\App\Http\Action;
 
 use App\Http\Action\HelloAction;
-use Framework\Template\TemplateRenderer;
+use Framework\Template\PhpRenderer;
 use PHPUnit\Framework\TestCase;
 
 class HelloActionTest extends TestCase
@@ -13,7 +13,7 @@ class HelloActionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->renderer = new TemplateRenderer('C:/projects/framework/templates');
+        $this->renderer = new PhpRenderer('C:/projects/framework/templates');
     }
 
     public function test(): void
