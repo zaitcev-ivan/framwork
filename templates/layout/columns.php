@@ -11,7 +11,14 @@
         <?= $this->renderBlock('main') ?>
     </div>
     <div class="col-md-3">
-        <?= $this->renderBlock('sidebar') ?>
+        <?php if ($this->ensureBlock('sidebar')): ?>
+        <div class="panel panel-default">
+            <div class="panel-heading">Site</div>
+            <div class="panel-body">
+                Site navigation
+            </div>
+        </div>
+            <?php $this->endBlock(); endif; ?>
     </div>
 </div>
 <?php $this->endBlock() ?>

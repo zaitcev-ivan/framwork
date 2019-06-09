@@ -4,7 +4,7 @@
  */
 ?>
 
-<?php $this->extend('layout/default'); ?>
+<?php $this->extend('layout/columns'); ?>
 
 <?php $this->beginBlock('title') ?>About<?php $this->endBlock() ?>
 
@@ -18,5 +18,6 @@
     <li class="active">About</li>
 </ul>
 <?php $this->endBlock() ?>
-
+<?php $this->beginBlock('main') ?>
 <h1>About the site</h1>
+<?php $this->endBlock() ?>
