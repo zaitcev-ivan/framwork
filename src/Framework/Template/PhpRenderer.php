@@ -19,18 +19,23 @@ class PhpRenderer implements TemplateRenderer
         $this->router = $router;
     }
 
-    public function render($view, array $params = []): string
+    public function render($name, array $params = []): string
     {
-        $templateFile = $this->path . '/' . $view . '.php';
-        ob_start();
-        extract($params, EXTR_OVERWRITE);
+        $level = ob_get_level();
+        $templateFile = $this->path . '/' . $name . '.php';
         $this->extend = null;
-
-        require $templateFile;
-
-        $content = ob_get_clean();
-
-        if (! $this->extend) {
+        try {
+            ob_start();
+            extract($params, EXTR_OVERWRITE);
+            require $templateFile;
+            $content = ob_get_clean();
+        } catch (\Throwable|\Exception $e) {
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+            throw $e;
+        }
+        if (!$this->extend) {
             return $content;
         }
         return $this->render($this->extend);
