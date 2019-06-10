@@ -14,10 +14,11 @@
 
 <?php $this->beginBlock('breadcrumbs') ?>
 <ul class="breadcrumb">
-    <li><a href="/">Home</a></li>
+    <li><a href="<?= $this->encode($this->path('home')) ?>">Home</a></li>
     <li class="active">About</li>
 </ul>
 <?php $this->endBlock() ?>
+
 <?php $this->beginBlock('main') ?>
 <h1>About the site</h1>
 <?php $this->endBlock() ?>

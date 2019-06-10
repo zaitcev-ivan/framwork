@@ -19,6 +19,7 @@
             </div>
         </div>
         <?php return ob_get_clean(); }); ?>
+        <?= $this->renderBlock('sidebar') ?>
     </div>
 </div>
 <?php $this->endBlock() ?>
