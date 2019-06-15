@@ -54,15 +54,15 @@ class MiddlewareResolverTest extends TestCase
     public function getValidHandlers(): array
     {
         return [
-            'Callable Callback' => [function (ServerRequestInterface $request, callable $next) {
+            'SinglePass Callback' => [function (ServerRequestInterface $request, callable $next) {
                 if ($request->getAttribute('next')) {
                     return $next($request);
                 }
                 return (new HtmlResponse(''))
                     ->withHeader('X-Header', $request->getAttribute('attribute'));
             }],
-            'Callable Class' => [CallableMiddleware::class],
-            'Callable Object' => [new CallableMiddleware()],
+            'SinglePass Class' => [SinglePassMiddleware::class],
+            'SinglePass Object' => [new SinglePassMiddleware()],
             'DoublePass Callback' => [function (ServerRequestInterface $request, ResponseInterface $response, callable $next) {
                 if ($request->getAttribute('next')) {
                     return $next($request);
@@ -85,7 +85,7 @@ class MiddlewareResolverTest extends TestCase
         $resolver = new MiddlewareResolver(new DummyContainer());
         $middleware = $resolver->resolve([
             new DummyMiddleware(),
-            new CallableMiddleware()
+            new SinglePassMiddleware()
         ], new Response());
         /** @var ResponseInterface $response */
         $response = $middleware(
@@ -98,7 +98,7 @@ class MiddlewareResolverTest extends TestCase
     }
 }
 
-class CallableMiddleware
+class SinglePassMiddleware
 {
     public function __invoke(ServerRequestInterface $request, callable $next): ResponseInterface
     {
