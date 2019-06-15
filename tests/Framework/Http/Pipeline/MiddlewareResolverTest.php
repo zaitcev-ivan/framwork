@@ -65,7 +65,7 @@ class MiddlewareResolverTest extends TestCase
             'SinglePass Object' => [new SinglePassMiddleware()],
             'DoublePass Callback' => [function (ServerRequestInterface $request, ResponseInterface $response, callable $next) {
                 if ($request->getAttribute('next')) {
-                    return $next($request);
+                    return $next($request, $response);
                 }
                 return $response
                     ->withHeader('X-Header', $request->getAttribute('attribute'));
@@ -114,7 +114,7 @@ class DoublePassMiddleware
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         if ($request->getAttribute('next')) {
-            return $next($request);
+            return $next($request, $response);
         }
         return $response
             ->withHeader('X-Header', $request->getAttribute('attribute'));
