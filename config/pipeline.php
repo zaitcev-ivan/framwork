@@ -2,10 +2,9 @@
 
 use App\Http\Middleware;
 
-/** @var \Framework\Container\Container $container */
 /** @var \Framework\Http\Application $app */
 
-$app->pipe(Middleware\ErrorHandlerMiddleware::class);
+$app->pipe(Middleware\ErrorHandler\ErrorHandlerMiddleware::class);
 $app->pipe(Middleware\CredentialsMiddleware::class);
 $app->pipe(Middleware\ProfilerMiddleware::class);
 $app->pipe(Framework\Http\Middleware\RouteMiddleware::class);
