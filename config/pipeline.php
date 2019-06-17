@@ -6,6 +6,7 @@ use Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
 /** @var \Framework\Http\Application $app */
 
 $app->pipe(ErrorHandlerMiddleware::class);
+$app->pipe(Middleware\ResponseLoggerMiddleware::class);
 $app->pipe(Middleware\CredentialsMiddleware::class);
 $app->pipe(Middleware\ProfilerMiddleware::class);
 $app->pipe(Framework\Http\Middleware\RouteMiddleware::class);
