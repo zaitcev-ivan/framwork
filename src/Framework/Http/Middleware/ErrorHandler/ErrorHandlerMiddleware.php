@@ -14,17 +14,19 @@ use Psr\Log\LoggerInterface;
  */
 class ErrorHandlerMiddleware implements MiddlewareInterface
 {
+    /**
+     * @var callable[]
+     */
+    private $listeners = [];
     private $responseGenerator;
-    private $logger;
 
     /**
      * ErrorHandlerMiddleware constructor.
      * @param ErrorResponseGenerator $responseGenerator
      */
-    public function __construct(ErrorResponseGenerator $responseGenerator, LoggerInterface $logger)
+    public function __construct(ErrorResponseGenerator $responseGenerator)
     {
         $this->responseGenerator = $responseGenerator;
-        $this->logger = $logger;
     }
 
     /**
@@ -37,22 +39,15 @@ class ErrorHandlerMiddleware implements MiddlewareInterface
         try {
             return $handler->handle($request);
         } catch (\Throwable $e) {
-            $this->logger->error($e->getMessage(), [
-                'exception' => $e,
-                'request' => self::extractRequest($request),
-            ]);
+            foreach ($this->listeners as $listener) {
+                $listener($e, $request);
+            }
             return $this->responseGenerator->generate($e, $request);
         }
     }
 
-    private static function extractRequest(ServerRequestInterface $request): array
+    public function addListener(callable $listener): void
     {
-        return [
-            'method' => $request->getMethod(),
-            'url' => (string)$request->getUri(),
-            'server' => $request->getServerParams(),
-            'cookies' => $request->getCookieParams(),
-            'body' => $request->getParsedBody(),
-        ];
+        $this->listeners[] = $listener;
     }
 }

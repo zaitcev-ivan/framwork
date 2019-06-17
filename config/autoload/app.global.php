@@ -4,6 +4,7 @@ use App\Http\Middleware;
 use Framework\Http\Application;
 use Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
 use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenerator;
+use Infrastructure\Http\Middleware\ErrorHandler\LogErrorListener;
 use Infrastructure\Http\Middleware\ErrorHandler\PrettyErrorResponseGenerator;
 use Framework\Http\Middleware\ErrorHandler\WhoopsErrorResponseGenerator;
 use Framework\Http\Pipeline\MiddlewareResolver;
@@ -32,10 +33,11 @@ return [
                 return new MiddlewareResolver($container, new Zend\Diactoros\Response());
             },
             ErrorHandlerMiddleware::class => function (ContainerInterface $container) {
-                return new ErrorHandlerMiddleware(
-                    $container->get(ErrorResponseGenerator::class),
-                    $container->get(Psr\Log\LoggerInterface::class)
+                $middleware =  new ErrorHandlerMiddleware(
+                    $container->get(ErrorResponseGenerator::class)
                 );
+                $middleware->addListener($container->get(LogErrorListener::class));
+                return $middleware;
             },
             ErrorResponseGenerator::class => function (ContainerInterface $container) {
                 if ($container->get('config')['debug']) {
