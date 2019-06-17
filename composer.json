@@ -23,6 +23,7 @@
         }
     },
     "require-dev": {
+        "filp/whoops": "^2.3",
         "phpunit/phpunit": "^7.5",
         "roave/security-advisories": "dev-master"
     },
