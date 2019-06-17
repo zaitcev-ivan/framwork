@@ -19,7 +19,6 @@ class AboutAction implements RequestHandlerInterface
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        throw new \LogicException('error');
         return new HtmlResponse($this->template->render('app/about'));
     }
 }
