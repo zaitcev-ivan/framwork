@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware\ErrorHandler;
+namespace Framework\Http\Middleware\ErrorHandler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -10,7 +10,7 @@ use Zend\Stratigility\Utils;
 
 /**
  * Class WhoopsErrorResponseGenerator
- * @package App\Http\Middleware\ErrorHandler
+ * @package Framework\Http\Middleware\ErrorHandler
  */
 class WhoopsErrorResponseGenerator implements ErrorResponseGenerator
 {

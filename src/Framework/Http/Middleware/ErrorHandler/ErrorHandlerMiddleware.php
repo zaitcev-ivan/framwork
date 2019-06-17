@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware\ErrorHandler;
+namespace Framework\Http\Middleware\ErrorHandler;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -9,7 +9,7 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * Class ErrorHandlerMiddleware
- * @package App\Http\Middleware\ErrorHandler
+ * @package Framework\Http\Middleware\ErrorHandler
  */
 class ErrorHandlerMiddleware implements MiddlewareInterface
 {

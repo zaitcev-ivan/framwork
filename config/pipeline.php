@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Middleware;
+use Framework\Http\Middleware\ErrorHandler\ErrorHandlerMiddleware;
 
 /** @var \Framework\Http\Application $app */
 
-$app->pipe(Middleware\ErrorHandler\ErrorHandlerMiddleware::class);
+$app->pipe(ErrorHandlerMiddleware::class);
 $app->pipe(Middleware\CredentialsMiddleware::class);
 $app->pipe(Middleware\ProfilerMiddleware::class);
 $app->pipe(Framework\Http\Middleware\RouteMiddleware::class);

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Middleware\ErrorHandler;
+namespace Infrastructure\Http\Middleware\ErrorHandler;
 
+use Framework\Http\Middleware\ErrorHandler\ErrorResponseGenerator;
 use Framework\Template\TemplateRenderer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -9,7 +10,7 @@ use Zend\Stratigility\Utils;
 
 /**
  * Class PrettyErrorResponseGenerator
- * @package App\Http\Middleware\ErrorHandler
+ * @package Framework\Http\Middleware\ErrorHandler
  */
 class PrettyErrorResponseGenerator implements ErrorResponseGenerator
 {
