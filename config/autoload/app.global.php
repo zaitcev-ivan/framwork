@@ -40,12 +40,6 @@ return [
                 return $middleware;
             },
             ErrorResponseGenerator::class => function (ContainerInterface $container) {
-                if ($container->get('config')['debug']) {
-                    return new WhoopsErrorResponseGenerator(
-                        $container->get(Whoops\RunInterface::class),
-                        new Zend\Diactoros\Response()
-                    );
-                }
                 return new PrettyErrorResponseGenerator(
                     $container->get(TemplateRenderer::class),
                     new Zend\Diactoros\Response(),
@@ -55,14 +49,6 @@ return [
                         'error' => 'error/error',
                     ]
                 );
-            },
-            Whoops\RunInterface::class => function () {
-                $whoops = new Whoops\Run();
-                $whoops->writeToOutput(false);
-                $whoops->allowQuit(false);
-                $whoops->pushHandler(new Whoops\Handler\PrettyPageHandler());
-                $whoops->register();
-                return $whoops;
             },
             Psr\Log\LoggerInterface::class => function (ContainerInterface $container)
             {
